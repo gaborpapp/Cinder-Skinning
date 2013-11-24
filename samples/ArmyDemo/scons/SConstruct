@@ -1,0 +1,19 @@
+env = Environment()
+
+env['APP_TARGET'] = 'ArmyDemoApp'
+env['APP_SOURCES'] = ['ArmyDemoApp.cpp']
+env['ASSETS'] = [ 'mageyes.png', 'mageyes_d.png', 'maggot3.md5anim',
+	'maggot3.md5mesh', 'maggot3.png', 'maggot3_d.png', 'maggot3_dis.png',
+	'maggot3_h.png', 'maggot3_local.png', 'maggot3_s.png', 'magspine.png',
+	'magspine_d.png', 'magspine_local.png', 'magspine_s.png', 'magtongue.png',
+	'magtongue_d.png', 'magtongue_h.png', 'magtongue_local.png', 'magtongue_s.png']
+
+# Cinder-Skinning
+env = SConscript('../../../scons/SConscript', exports = 'env')
+
+# Cinder-Skinning has resources with the same name automatically installed, this
+# overwrites them, so there is no conflict during installing the resources
+env['RESOURCES'] = ['skinning_frag_normals.glsl', 'skinning_vert_normals.glsl']
+
+SConscript('../../../../../scons/SConscript', exports = 'env')
+

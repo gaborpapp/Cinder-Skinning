@@ -1,0 +1,12 @@
+env = Environment()
+
+env['APP_TARGET'] = 'CustomShaderDemoApp'
+env['APP_SOURCES'] = ['CustomShaderDemoApp.cpp']
+env['RESOURCES'] = ['astroboy_walk.dae', 'custom_frag.glsl',
+	'custom_vert.glsl', 'seymour.jpg']
+
+# Cinder-Skinning
+env = SConscript('../../../scons/SConscript', exports = 'env')
+
+SConscript('../../../../../scons/SConscript', exports = 'env')
+

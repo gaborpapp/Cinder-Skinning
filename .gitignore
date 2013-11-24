@@ -7,7 +7,7 @@ build/
 *.xcworkspace/
 xcuserdata/
 *.user
-
+*.o
 
 #Windows cruft
 /Debug
@@ -23,3 +23,6 @@ xcuserdata/
 *.psess
 *.vspx
 Resources.aps
+
+# scons
+.sconsign.dblite

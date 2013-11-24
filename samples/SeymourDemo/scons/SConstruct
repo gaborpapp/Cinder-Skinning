@@ -1,0 +1,13 @@
+env = Environment()
+
+env['APP_TARGET'] = 'SeymourDemoApp'
+env['APP_SOURCES'] = ['SeymourDemoApp.cpp', 'Treadmill.cpp']
+env['ASSETS'] = ['astroboy_walk.dae', 'seymour.jpg',
+	'hazard_stripes.jpg', 'shadow.png']
+env['RESOURCES'] = ['treadmill_frag.glsl', 'treadmill_vert.glsl']
+
+# Cinder-Skinning
+env = SConscript('../../../scons/SConscript', exports = 'env')
+
+SConscript('../../../../../scons/SConscript', exports = 'env')
+

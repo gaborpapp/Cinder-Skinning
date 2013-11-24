@@ -1,0 +1,29 @@
+Import('env')
+
+_INCLUDES = [Dir('../include').abspath]
+
+_SOURCES = ['Actor.cpp', 'ModelIo.cpp', 'ModelTargetSkinnedVboMesh.cpp',
+	'SkinnedMesh.cpp', 'AnimCurve.cpp', 'ModelSourceAssimp.cpp', 'Node.cpp',
+	'SkinnedVboMesh.cpp', 'CustomIOStream.cpp', 'ModelTargetSkinnedMesh.cpp',
+	'Skeleton.cpp', 'SkinningRenderer.cpp']
+
+_SOURCES = [File('../src/' + s).abspath for s in _SOURCES]
+
+_LIBS = ['libassimp.a']
+if env['PLATFORM'] == 'darwin':
+	_LIBS = [Dir('../lib/macosx/').abspath + '/' + s for s in _LIBS]
+else:
+	_LIBS = []
+
+_LIBS = [File(s) for s in _LIBS]
+
+_RESOURCES = ['skinning_frag_no_normals.glsl', 'skinning_frag_normals.glsl',
+		'skinning_vert_no_normals.glsl', 'skinning_vert_normals.glsl']
+_RESOURCES = [File('../resources/' + r).abspath for r in _RESOURCES]
+
+env.Append(APP_SOURCES = _SOURCES)
+env.Append(CPPPATH = _INCLUDES)
+env.Append(RESOURCES = _RESOURCES)
+env.Append(LIBS = _LIBS)
+
+Return('env')

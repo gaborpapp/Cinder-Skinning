@@ -1,0 +1,13 @@
+env = Environment()
+
+env['APP_TARGET'] = 'MultipleAnimationsDemoApp'
+env['APP_SOURCES'] = ['MultipleAnimationsDemoApp.cpp']
+env['ASSETS'] = ['Sinbad.material', 'Sinbad.mesh.xml', 'Sinbad.skeleton.xml',
+	'Sword.material', 'Sword.mesh.xml', 'sinbad_body.jpg',
+	'sinbad_clothes.jpg', 'sinbad_sword.jpg']
+
+# Cinder-Skinning
+env = SConscript('../../../scons/SConscript', exports = 'env')
+
+SConscript('../../../../../scons/SConscript', exports = 'env')
+

@@ -1,0 +1,15 @@
+env = Environment()
+
+env['APP_TARGET'] = 'ProceduralAnimApp'
+env['APP_SOURCES'] = ['ProceduralAnimApp.cpp']
+env['ASSETS'] = ['gannet NORM.tif', 'gannet SPEC.tif', 'gannet bump.tif',
+	'gannet diffuse2.tif', 'gannet opac.tif', 'gannet rig2.DAE',
+	'gannet rig2.max', 'gannet rig2.mtl', 'gannet rig2.obj',
+	'particle.png']
+env['RESOURCES'] = ['cloud_frag.glsl', 'cloud_vert.glsl']
+
+# Cinder-Skinning
+env = SConscript('../../../scons/SConscript', exports = 'env')
+
+SConscript('../../../../../scons/SConscript', exports = 'env')
+
