@@ -31,13 +31,13 @@ public:
 	
 	void addChild( NodeRef Node );
 	
-	const NodeRef&		getParent() const { return mParent; }
-	NodeRef&			getParent() { return mParent; }
+	const std::weak_ptr<Node>&		getParent() const { return mParent; }
+	std::weak_ptr<Node>&			getParent() { return mParent; }
 	void				setParent( NodeRef parent );
 	
-	int		numChildren() const { return mChildren.size(); }
+	int		getNumChildren() const { return mChildren.size(); }
 	bool	hasChildren() const { return !mChildren.empty(); }
-	bool	hasParent()   const { return mParent != nullptr; }
+	bool	hasParent()   const { return !mParent.expired(); }
 	
 	const std::vector<NodeRef>& getChildren() const { return mChildren; }
 	std::vector<NodeRef>&		getChildren() { return mChildren; }
@@ -68,6 +68,9 @@ public:
 	ci::Vec3f&				getAbsoluteScale();
 	const ci::Vec3f&		getAbsoluteScale() const;
 	
+	// Setting absolute positions is a more expensive operation: we have to compute relative ones
+	void					setAbsolutePosition( const ci::Vec3f& pos );
+
 	void					setRelativePosition( const ci::Vec3f& pos );
 	void					setRelativeRotation( const ci::Quatf& rotation );
 	void					setRelativeScale( const ci::Vec3f& scale );
@@ -136,7 +139,7 @@ protected:
 	
 	std::unique_ptr<ci::Matrix44f> mOffset;
 	
-	NodeRef		mParent;
+	std::weak_ptr<Node> mParent;
 	std::vector<NodeRef> mChildren;
 	std::string	mName;
 	int			mLevel;

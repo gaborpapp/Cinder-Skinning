@@ -13,19 +13,8 @@
 namespace model {
 
 Skeleton::RenderMode Skeleton::mRenderMode = Skeleton::RenderMode::FULL;
-
-SkeletonRef Skeleton::create( const std::unordered_set<std::string>& boneNames )
-{
-	SkeletonRef inst( new Skeleton() );
-	for( const std::string& name : boneNames ) {
-		inst->insertBone( name, nullptr );
-	}
-	return inst;
-}
-
-Skeleton::Skeleton( NodeRef root, std::map<std::string, NodeRef> boneNames )
-: mRootNode( root )
-, mBoneNames( boneNames )
+	
+Skeleton::Skeleton()
 { }
 
 void cloneTraversal( const NodeRef& origin, NodeRef& copy )
@@ -74,15 +63,9 @@ void Skeleton::setPose( float time, int animId )
 void Skeleton::setBlendedPose( float time, const std::unordered_map<int, float>& weights )
 {
 	traverseNodes( mRootNode,
-				  [=] ( NodeRef n ) {
+				  [&time, &weights] ( NodeRef n ) {
 					  n->blendAnimate( time, weights );
 				  } );
-}
-
-int Skeleton::findBoneIndex( const std::string& name ) const
-{
-	auto it = mBoneNames.find( name );
-	return std::distance( mBoneNames.begin(), it );
 }
 
 bool Skeleton::hasBone( const std::string& name ) const
@@ -90,9 +73,13 @@ bool Skeleton::hasBone( const std::string& name ) const
 	return mBoneNames.find( name ) != mBoneNames.end();
 }
 
-const NodeRef& Skeleton::getBone( const std::string& name ) const
+NodeRef Skeleton::getBone( const std::string& name ) const
 {
-	return mBoneNames.at( name );
+	if( mBoneNames.count(name) > 0 ) {
+		return mBoneNames.at( name );
+	} else {
+		return nullptr;
+	}
 }
 
 NodeRef Skeleton::getNode(const std::string& name) const
@@ -100,9 +87,12 @@ NodeRef Skeleton::getNode(const std::string& name) const
 	return findNode( name, mRootNode );
 }
 
-void Skeleton::insertBone(const std::string &name, const NodeRef &bone)
+void Skeleton::addBone(const std::string &name, const NodeRef &bone)
 {
-	mBoneNames[name] = bone;
+	if( mBoneNames.count(name) == 0 ) {
+		bone->setBoneIndex( mBoneNames.size() );
+		mBoneNames[name] = bone;
+	}
 }
 
 NodeRef Skeleton::findNode( const std::string& name, const NodeRef& node ) const
@@ -134,8 +124,10 @@ std::ostream& operator<<( std::ostream& o, const Skeleton& skeleton )
 						   [& o] (NodeRef node)
 						   {
 							   o << "Node:" << node->getName() << " level:" << node->getLevel();
-							   if( node->hasParent() ) {
-								   o << " parent:" << node->getParent()->getName();
+							   
+							   auto parent = node->getParent().lock();
+							   if( parent ) {
+								   o << " parent:" << parent->getName();
 							   }
 							   o << std::endl;
 							   o << "Position:" << node->getAbsolutePosition() << std::endl;
